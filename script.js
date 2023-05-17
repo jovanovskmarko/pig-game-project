@@ -20,6 +20,7 @@ diceEl.classList.add('hidden');
 const scores = [0, 0]
 let currentScore = 0;
 let activePlayer = 0;
+let playing = true;
 
 const switchPlayer = function(){
     document.getElementById(`current--${activePlayer}`).textContent = 0;
@@ -30,30 +31,45 @@ const switchPlayer = function(){
 }
 
 btnRoll.addEventListener('click', function(){
-    // Roll the dice
-    const dice = Math.trunc(Math.random() * 6) + 1;
+    if(playing) {
+        // Roll the dice
+        const dice = Math.trunc(Math.random() * 6) + 1;
 
-    // Display image
-    diceEl.classList.remove('hidden');
-    diceEl.src = `../images/dice-${dice}.png`;
+        // Display image
+        diceEl.classList.remove('hidden');
+        diceEl.src = `../images/dice-${dice}.png`;
 
-    // Check if 1 is rolled
-    if(dice != 1) {
-        currentScore += dice;
-        document.getElementById(`current--${activePlayer}`).textContent = currentScore;
-    }
-    else {
-       switchPlayer();
+        // Check if 1 is rolled
+        if(dice != 1) {
+            currentScore += dice;
+            document.getElementById(`current--${activePlayer}`).textContent = currentScore;
+        }
+        else {
+        switchPlayer();
+        }
     }
 })
 
 btnHold.addEventListener('click', function(){
-    // Add current score to the active player's score
-    scores[activePlayer] += currentScore;
-    
-    // Display score 
-    document.getElementById(`score--${activePlayer}`).textContent = scores[activePlayer];
+    if(playing) {
+        // Add current score to the active player's score
+        scores[activePlayer] += currentScore;
+        
+        // Display score 
+        document.getElementById(`score--${activePlayer}`).textContent = scores[activePlayer];
 
-    // Switch player
-    switchPlayer();
+        // Win condition
+        if(scores[activePlayer] >= 10) {
+            document.querySelector(`.player--${activePlayer}`).classList.add('player--winner');
+            document.querySelector(`.player--${activePlayer}`).classList.remove('player--active');
+            playing = false;
+        }
+
+        else {
+            // Switch player
+            switchPlayer();
+        }
+
+        
+    }
 })
