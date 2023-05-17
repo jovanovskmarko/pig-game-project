@@ -17,10 +17,17 @@ score0.textContent = 0;
 score1.textContent = 0;
 diceEl.classList.add('hidden');
 
-// State variables
 const scores = [0, 0]
 let currentScore = 0;
 let activePlayer = 0;
+
+const switchPlayer = function(){
+    document.getElementById(`current--${activePlayer}`).textContent = 0;
+    currentScore = 0;
+    activePlayer = activePlayer === 0 ? 1: 0;
+    player1.classList.toggle('player--active');
+    player2.classList.toggle('player--active');
+}
 
 btnRoll.addEventListener('click', function(){
     // Roll the dice
@@ -36,10 +43,17 @@ btnRoll.addEventListener('click', function(){
         document.getElementById(`current--${activePlayer}`).textContent = currentScore;
     }
     else {
-        document.getElementById(`current--${activePlayer}`).textContent = 0;
-        currentScore = 0;
-        activePlayer = activePlayer === 0 ? 1: 0;
-        player1.classList.toggle('player--active');
-        player2.classList.toggle('player--active');
+       switchPlayer();
     }
+})
+
+btnHold.addEventListener('click', function(){
+    // Add current score to the active player's score
+    scores[activePlayer] += currentScore;
+    
+    // Display score 
+    document.getElementById(`score--${activePlayer}`).textContent = scores[activePlayer];
+
+    // Switch player
+    switchPlayer();
 })
